@@ -41,7 +41,7 @@ class Post(models.Model):
     text = models.TextField()
     rating = models.IntegerField(default=0)
 
-    categories = models.ManyToManyField(Category, through='PostCategory')
+    categories = models.ManyToManyField(Category, through='PostCategory', related_name='posts')
 
     def like(self):
         self.rating += 1
@@ -53,6 +53,9 @@ class Post(models.Model):
 
     def preview(self):
         return self.text[0:123] + "..."
+
+    def __str__(self):
+        return f'{self.title}: {self.text}'
 
 
 class PostCategory(models.Model):
