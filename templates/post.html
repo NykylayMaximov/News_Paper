@@ -7,5 +7,8 @@ Post
 
 
 {% block content %}
-<h1>{{ post }}</h1>
+    <h1>{{ post.title }}</h1>
+    <h3>{{ post.time|date:'d M Y' }}</h3>
+    <hr>
+    <p>{{ post.text }} </p>
 {% endblock content %}

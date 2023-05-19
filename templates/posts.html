@@ -7,6 +7,24 @@ Posts
 
 
 {% block content %}
-<h1>Все новости</h1>
-{{ posts }}
+    <h1>Всего {{ posts|length }} новостей</h1>
+    <hr>
+    {% if posts %}
+        <table>
+            <tr>
+                <td>Заголовок</td>
+                <td>Дата публикации</td>
+                <td>Превью</td>
+            </tr>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.title }} </td>
+                <td>{{ post.time }}</td>
+                <td>{{ post.text|truncatewords:20 }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2>Сорян, новостей нету!</h2>
+    {% endif %}
 {% endblock content %}
