@@ -8,6 +8,7 @@ class PostList(ListView):
     ordering = '-time'
     template_name = 'Posts.html'
     context_object_name = 'posts'
+    paginate_by = 1
 
 
 class PostDateil(DetailView):
