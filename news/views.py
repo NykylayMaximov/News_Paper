@@ -7,13 +7,14 @@ from .filters import PostFilter
 class PostList(ListView):
     model = Post
     ordering = '-time'
-    template_name = 'Posts.html'
+    template_name = 'posts.html'
     context_object_name = 'posts'
-    paginate_by = 1
+    paginate_by = 10
+
 
 class PostSearch(ListView):
     model = Post
-    template_name = 'Posts_search.html'
+    template_name = 'posts_search.html'
     context_object_name = 'posts'
     paginate_by = 1
 
