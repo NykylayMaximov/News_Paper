@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.urls import reverse
 
 
 # Функция перебирает полученный QuerySet, добавляет значение рейтинга на новый список и возвращает сумму списка
@@ -59,6 +60,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title}: {self.text}'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):

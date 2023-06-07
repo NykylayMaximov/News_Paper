@@ -1,7 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.urls import reverse_lazy
 from .models import Post
 from .filters import PostFilter
+from .forms import PostForm
 
 
 class PostList(ListView):
@@ -33,3 +34,28 @@ class PostDateil(DetailView):
     model = Post
     template_name = 'Post.html'
     context_object_name = 'post'
+
+
+class PostCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
+
+    # def form_valid(self, form):
+    #     post = form.save(commit=False)
+    #     queryset = super().get_queryset()
+    #     q = 'news'
+    #     if q in str(queryset):
+    #         post.post_or_news = True
+    #     return super().form_valid(form)
+
+class PostUpdate(UpdateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
+
+
+class PostDelete(DeleteView):
+    model = Post
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('post_list')
