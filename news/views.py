@@ -17,7 +17,7 @@ class PostSearch(ListView):
     model = Post
     template_name = 'posts_search.html'
     context_object_name = 'posts'
-    paginate_by = 1
+    paginate_by = 3
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -41,13 +41,6 @@ class PostCreate(CreateView):
     model = Post
     template_name = 'post_edit.html'
 
-    # def form_valid(self, form):
-    #     post = form.save(commit=False)
-    #     queryset = super().get_queryset()
-    #     q = 'news'
-    #     if q in str(queryset):
-    #         post.post_or_news = True
-    #     return super().form_valid(form)
 
 class PostUpdate(UpdateView):
     form_class = PostForm
