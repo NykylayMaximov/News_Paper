@@ -29,6 +29,9 @@ class Author(models.Model):
         self.rating = posts_rating_sum * 3 + posts_comments_rating_sum + comments_rating_sum
         self.save()
 
+    def __str__(self):
+        return self.user
+
 
 class Category(models.Model):
     category = models.CharField(max_length=255, unique=True)
@@ -84,3 +87,12 @@ class Comment(models.Model):
     def dislike(self):
         self.rating -= 1
         self.save()
+
+
+class Subscribers(models.Model):
+    subscribe = models.BooleanField(default=False)
+
+
+class UserSubscribe(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    subscribe = models.ForeignKey(Subscribers, on_delete=models.CASCADE)
