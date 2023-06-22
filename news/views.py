@@ -36,6 +36,11 @@ class PostDateil(DetailView):
     template_name = 'Post.html'
     context_object_name = 'post'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_subscribe'] = self.request.user.subscribers.filter(name='')
+        return context
+
 
 class PostCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_post')

@@ -35,9 +35,15 @@ class Author(models.Model):
 
 class Category(models.Model):
     category = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User, blank=True, through='SubscribeCategory', related_name='subscribers')
 
     def __str__(self):
         return self.category
+
+
+class SubscribeCategory(models.Model):
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
 class Post(models.Model):
@@ -88,11 +94,3 @@ class Comment(models.Model):
         self.rating -= 1
         self.save()
 
-
-class Subscribers(models.Model):
-    subscribe = models.BooleanField(default=False)
-
-
-class UserSubscribe(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    subscribe = models.ForeignKey(Subscribers, on_delete=models.CASCADE)
