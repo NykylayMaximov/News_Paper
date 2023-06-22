@@ -29,8 +29,8 @@ class Author(models.Model):
         self.rating = posts_rating_sum * 3 + posts_comments_rating_sum + comments_rating_sum
         self.save()
 
-    def __str__(self):
-        return self.user
+    # def __str__(self):
+    #     return self.user
 
 
 class Category(models.Model):

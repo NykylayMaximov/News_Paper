@@ -12,4 +12,5 @@ Post
     <h3>{{ post.time|date:'d M Y' }}</h3>
     <hr>
     <p>{{ post.text|censor }} </p>
+    <p> {{ is_not_subscribe }} </p>
 {% endblock content %}
