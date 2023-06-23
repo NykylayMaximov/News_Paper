@@ -38,7 +38,7 @@ class PostDateil(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_not_subscribe'] = self.request.user.subscribers.filter(category='Наука')
+        context['is_not_subscribe'] = self.request.user.subscribers.get(category='Спорт')
         return context
 
 
