@@ -35,7 +35,6 @@ class PostDateil(DetailView):
     model = Post
     template_name = 'Post.html'
     context_object_name = 'post'
-    # post_category = Post.objects.get()
 
     def get_object(self, queryset=None):
         self.obj = super().get_object(queryset=queryset)
@@ -43,9 +42,8 @@ class PostDateil(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        context['post_category'] = self.obj.id
-        context['is_not_subscribe'] = self.request.user.subscribers.get(category="Наука")
+        context['post_category'] = self.obj.categories.all()
+        context['user_subscribers'] = self.request.user.subscribers.all()
         return context
 
 
@@ -69,3 +67,9 @@ class PostDelete(PermissionRequiredMixin, DeleteView):
     model = Post
     template_name = 'post_delete.html'
     success_url = reverse_lazy('post_list')
+
+
+def subscribe(request):
+    user = request.user
+    post_category =
+

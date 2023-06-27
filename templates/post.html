@@ -12,6 +12,18 @@ Post
     <h3>{{ post.time|date:'d M Y' }}</h3>
     <hr>
     <p>{{ post.text|censor }} </p>
-    <p> {{ is_not_subscribe }} </p>
+    <hr>
+    Категория:
+    {% for category in post_category %}
+    -{{category}}-
+    {% if category in user_subscribers %}
+        <button> <a href="posts/unsubscribe/">Отписаться</a> </button>
+        {% else %}
+        <button> <a href="posts/subscribe">Подписаться</a> </button>
+        {% endif %}
+    {% endfor %}
+
+    <p> {{ user_subscribers }} </p>
     <p> {{ post_category }} </p>
+
 {% endblock content %}
