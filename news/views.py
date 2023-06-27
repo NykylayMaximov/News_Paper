@@ -35,10 +35,17 @@ class PostDateil(DetailView):
     model = Post
     template_name = 'Post.html'
     context_object_name = 'post'
+    # post_category = Post.objects.get()
+
+    def get_object(self, queryset=None):
+        self.obj = super().get_object(queryset=queryset)
+        return self.obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_not_subscribe'] = self.request.user.subscribers.get(category='Спорт')
+
+        context['post_category'] = self.obj.id
+        context['is_not_subscribe'] = self.request.user.subscribers.get(category="Наука")
         return context
 
 
