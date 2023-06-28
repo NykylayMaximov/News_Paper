@@ -1,9 +1,13 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .models import Post
+from .models import Post, SubscribeCategory, Category
+from django.contrib.auth.models import User
 from .filters import PostFilter
 from .forms import PostForm
+from django.shortcuts import redirect
+from django.core.mail import send_mail
 
 
 class PostList(ListView):
@@ -43,7 +47,8 @@ class PostDateil(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['post_category'] = self.obj.categories.all()
-        context['user_subscribers'] = self.request.user.subscribers.all()
+        if self.request.user.id:
+            context['user_subscribers'] = self.request.user.subscribers.all()
         return context
 
 
@@ -52,6 +57,15 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
+
+    def send_mail(self, request):
+        post = self.object
+        user = request.user
+        send_mail(subject=f'{self.post.author}',
+                  message=self.post.title,
+                  from_email='nick.max89@yandex.ru',
+                  recipient_list=['nick.max@mail.ru'])
+        return redirect('post_list')
 
 
 class PostUpdate(PermissionRequiredMixin, UpdateView):
@@ -69,7 +83,15 @@ class PostDelete(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy('post_list')
 
 
-def subscribe(request):
+@login_required()
+def subscribe(request, pk, pp):
     user = request.user
-    post_category =
+    SubscribeCategory.objects.create(subscriber=User.objects.get(pk=user.id),
+                                     category=Category.objects.get(pk=pk))
+    return redirect(f'/posts/{pp}')
 
+
+@login_required()
+def unsubscribe(request, pk, pp):
+    SubscribeCategory.objects.filter(category=Category.objects.get(pk=pk)).delete()
+    return redirect(f'/posts/{pp}')

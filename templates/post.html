@@ -17,13 +17,13 @@ Post
     {% for category in post_category %}
     -{{category}}-
     {% if category in user_subscribers %}
-        <button> <a href="posts/unsubscribe/">Отписаться</a> </button>
+        <button> <a href="{{post.id}}/unsubscribe/{{category.id}}">Отписаться</a> </button>
         {% else %}
-        <button> <a href="posts/subscribe">Подписаться</a> </button>
+        <button> <a href="{{post.id}}/subscribe/{{category.id}}">Подписаться</a> </button>
         {% endif %}
     {% endfor %}
 
-    <p> {{ user_subscribers }} </p>
-    <p> {{ post_category }} </p>
 
+    <p> {{ post_category }} </p>
+    <p> {{ user_subscribers }} </p>
 {% endblock content %}
