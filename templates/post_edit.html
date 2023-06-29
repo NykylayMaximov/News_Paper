@@ -1,8 +1,9 @@
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
-<h1>Новости</h1>
+<h1>Создать пост:</h1>
 <hr>
+<h5> Автор: {{ user }}</h5>
 <form action="" method="POST">
     {% csrf_token %}
     {{ form.as_p }}

@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from .models import Post, SubscribeCategory, Category
+from .models import Post, SubscribeCategory, Category, PostCategory
 from django.contrib.auth.models import User
 from .filters import PostFilter
 from .forms import PostForm
@@ -62,27 +62,20 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         post = Post(author_id=request.user.id,
                     title=request.POST['title'],
-                    text=request.POST['text'])
+                    text=request.POST['text'],)
         post.save()
-        # post = {'author': request.user.username,
-        #         'title': request.POST['title'],
-        #         'text': request.POST['text'],
-        #         }
+        PostCategory.objects.create(post_id=post.id, category_id=request.POST['categories'])
+
         html_content = render_to_string('post_send_email.html', {'post': post})
         msg = EmailMultiAlternatives(
             subject=request.user.username,
             body=request.POST['title'],
             from_email='nick.max89@gmail.com',
-            # to=['nick.max89@yandex.ru'],
-            # to=['nick.max89@gmail.com'],
             to=['nick.max@mail.ru']
         )
         msg.attach_alternative(html_content, 'text/html')
         msg.send()
-        # send_mail(subject=request.user.username,
-        #           message=request.POST['title'],
-        #           from_email='nick.max89@yandex.ru',
-        #           recipient_list=['nick.max@mail.ru'])
+
         return redirect('post_list')
 
 
@@ -111,5 +104,6 @@ def subscribe(request, pk, pp):
 
 @login_required()
 def unsubscribe(request, pk, pp):
-    SubscribeCategory.objects.filter(category=Category.objects.get(pk=pk)).delete()
+    user = request.user
+    SubscribeCategory.objects.filter(category=Category.objects.get(pk=pk), subscriber=user.id).delete()
     return redirect(f'/posts/{pp}')
