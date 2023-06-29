@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post</title>
+</head>
+<body>
+    <h2> Здравствуй, {{ post.author_id }}. Новая статья в твоем любимом разделе! </h2>
+    <h3> {{ post.title }} </h3>
+    <p> {{ post.text|truncatechars:50 }}</p>
+</body>
+</html>

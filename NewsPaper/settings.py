@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv, find_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -157,8 +158,10 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_FORMS = {'signup': 'sign.models.BasicSignupForm'}
 
-EMAIL_HOST = 'smtp.yandex.ru'
+load_dotenv(find_dotenv())
+
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'nick.max89'
-EMAIL_HOST_PASSWORD = 'twqhrnagcygsjkzz'
+EMAIL_HOST_USER = os.environ.get('email_host_user')
+EMAIL_HOST_PASSWORD = os.environ.get('email_host_password')
 EMAIL_USE_SSL = True

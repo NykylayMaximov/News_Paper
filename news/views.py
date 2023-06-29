@@ -1,13 +1,14 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from .models import Post, SubscribeCategory, Category
 from django.contrib.auth.models import User
 from .filters import PostFilter
 from .forms import PostForm
-from django.shortcuts import redirect
-from django.core.mail import send_mail
+from django.shortcuts import redirect, render
+from django.core.mail import send_mail, EmailMultiAlternatives
 
 
 class PostList(ListView):
@@ -58,13 +59,30 @@ class PostCreate(PermissionRequiredMixin, CreateView):
     model = Post
     template_name = 'post_edit.html'
 
-    def send_mail(self, request):
-        post = self.object
-        user = request.user
-        send_mail(subject=f'{self.post.author}',
-                  message=self.post.title,
-                  from_email='nick.max89@yandex.ru',
-                  recipient_list=['nick.max@mail.ru'])
+    def post(self, request, *args, **kwargs):
+        post = Post(author_id=request.user.id,
+                    title=request.POST['title'],
+                    text=request.POST['text'])
+        post.save()
+        # post = {'author': request.user.username,
+        #         'title': request.POST['title'],
+        #         'text': request.POST['text'],
+        #         }
+        html_content = render_to_string('post_send_email.html', {'post': post})
+        msg = EmailMultiAlternatives(
+            subject=request.user.username,
+            body=request.POST['title'],
+            from_email='nick.max89@gmail.com',
+            # to=['nick.max89@yandex.ru'],
+            # to=['nick.max89@gmail.com'],
+            to=['nick.max@mail.ru']
+        )
+        msg.attach_alternative(html_content, 'text/html')
+        msg.send()
+        # send_mail(subject=request.user.username,
+        #           message=request.POST['title'],
+        #           from_email='nick.max89@yandex.ru',
+        #           recipient_list=['nick.max@mail.ru'])
         return redirect('post_list')
 
 
