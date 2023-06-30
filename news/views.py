@@ -64,17 +64,33 @@ class PostCreate(PermissionRequiredMixin, CreateView):
                     title=request.POST['title'],
                     text=request.POST['text'],)
         post.save()
-        PostCategory.objects.create(post_id=post.id, category_id=request.POST['categories'])
 
-        html_content = render_to_string('post_send_email.html', {'post': post})
-        msg = EmailMultiAlternatives(
-            subject=request.user.username,
-            body=request.POST['title'],
-            from_email='nick.max89@gmail.com',
-            to=['nick.max@mail.ru']
-        )
-        msg.attach_alternative(html_content, 'text/html')
-        msg.send()
+        category_list = request.POST.getlist('categories')
+        user_id_list = []
+        user_subscriber_list = []
+        user_email_dict = {}
+        for category in category_list:
+            PostCategory.objects.create(post_id=post.id, category_id=category)
+            user_id_list += SubscribeCategory.objects.filter(category_id=category).values('subscriber__id')
+
+        for user in user_id_list:
+            if user['subscriber__id'] not in user_subscriber_list and int(user['subscriber__id']) != request.user.id:
+                user_subscriber_list.append(user['subscriber__id'])
+
+        for id in user_subscriber_list:
+            subscribe_user = User.objects.get(pk=id)
+            user_email_dict[subscribe_user.username] = subscribe_user.email
+
+        if user_email_dict:
+            for user_name, email in user_email_dict.items():
+                html_content = render_to_string('post_send_email.html', {'post': post, 'user_name': user_name})
+                msg = EmailMultiAlternatives(
+                    subject=post.title,
+                    from_email='nick.max89@gmail.com',
+                    to=[email]
+                )
+                msg.attach_alternative(html_content, 'text/html')
+                msg.send()
 
         return redirect('post_list')
 

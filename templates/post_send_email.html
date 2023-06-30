@@ -5,8 +5,8 @@
     <title>Post</title>
 </head>
 <body>
-    <h2> Здравствуй, {{ post.author_id }}. Новая статья в твоем любимом разделе! </h2>
+    <h2> Здравствуй, {{ user_name }}. Новая статья в твоем любимом разделе! </h2>
     <h3> {{ post.title }} </h3>
-    <p> {{ post.text|truncatechars:50 }}</p>
+    <p> {{ post.text|truncatechars:75 }}</p>
 </body>
 </html>
