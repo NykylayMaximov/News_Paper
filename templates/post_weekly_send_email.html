@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post</title>
+</head>
+<body>
+    <h2> Здравствуй! Сборка статей за неделю, на которых Вы подписаны: </h2>
+    {% for post in posts %}
+    <h3> <a href="http://127.0.0.1:8000{{ post.get_absolute_url }}">{{ post.title }}</a> </h3>
+    <p> {{ post.text|truncatechars:75 }}</p>
+    <hr>
+    {% endfor %}
+</body>
+</html>
