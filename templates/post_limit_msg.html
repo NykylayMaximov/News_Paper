@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Ошибка{% endblock title %}</title>
+</head>
+<body>
+    {% block content %}
+    <h3> Невозможно создавать больше 3 постов в сутки </h3>
+    {% endblock content %}
+</body>
+</html>
